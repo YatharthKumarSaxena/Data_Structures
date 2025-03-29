@@ -1,6 +1,5 @@
 #include <iostream>
 #include <list>
-#include <climits>
 #include <vector>
 #include <unordered_set>
 #include <queue>
@@ -19,7 +18,7 @@ public:
     void createGraph();
     void add_Edge(type src,type des);
     void display();
-    void BFS_ShortestPath(type src);
+    void BFS(type src);
 };
 
 template <class type>
@@ -65,21 +64,18 @@ void Graph<type>::display(){
 }
 
 template <class type>
-void Graph<type>::BFS_ShortestPath(type src){
-    vector<int>dis(unweighted_Graph.size(),INT_MAX);
+void Graph<type>::BFS(type src){
     unordered_set<type>visited;
     visited.insert(src);
-    dis[src]=0;
     queue<type>qu;
     qu.push(src);
-    cout<<"Distance from "<<src<<" to \n";
+    cout<<"BFS Traversal is given below:-\n";
     while(not qu.empty()){
         type curr = qu.front();
+        cout<<curr<<" ";
         qu.pop();
         for(auto neighbour: unweighted_Graph[curr]){
             if(not visited.count(neighbour)){
-                dis[neighbour]=dis[curr]+1;
-                cout<<neighbour<<":- "<<dis[neighbour]<<endl;
                 visited.insert(neighbour);
                 qu.push(neighbour);
             }
@@ -104,7 +100,7 @@ int main(){
         int src,des;
         cout<<"Please enter the Source:- ";
         cin>>src;
-        G.BFS_ShortestPath(src);
+        G.BFS(src);
     }
     return 0;
 }
