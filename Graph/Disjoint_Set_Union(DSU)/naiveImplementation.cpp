@@ -25,6 +25,7 @@ int DSU::findGroupLeader(int ele){ // Return the Group Element of the Element el
 void DSU::unionGroups(int eleA,int eleB){ // Combine the Group Elements of B into Group Elements of A
     int parA = findGroupLeader(eleA);
     int parB = findGroupLeader(eleB);
+    if(parA == parB)return;
     for(int i=0;i<this->size;i++){
         if(par[i]==parB)par[i]=parA;
     }
