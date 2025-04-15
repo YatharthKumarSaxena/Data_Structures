@@ -1,8 +1,44 @@
 #include <iostream>
-#include <list>
 #include <vector>
 #include <set>
+#include <list>
 using namespace std;
+
+class DSU{
+    int capacity;
+    int *par;
+    int *rank;
+public:
+    DSU(int capacity){
+        this->capacity = capacity;
+        par = new int[capacity];
+        rank = new int[capacity];
+        for(int i=0;i<capacity;i++){
+            rank[i] = 1;
+            par[i] = i;
+        }
+    }
+    void unionOfGroups(int eleA,int eleB);
+    int findGroupLeader(int ele);
+};
+
+int DSU::findGroupLeader(int ele){
+    return par[ele] = ((par[ele]==ele)?ele:findGroupLeader(par[ele]));
+}
+
+void DSU::unionOfGroups(int eleA,int eleB){
+    int parA = findGroupLeader(eleA);
+    int parB = findGroupLeader(eleB);
+    if(parA == parB)return;
+    if(rank[parA]>=rank[parB]){
+        par[parB] = parA;
+        rank[parA]++;
+    }
+    else{
+        par[parA] = parB;
+        rank[parB]++;
+    }
+}
 
 class Graph{
     vector<list<int>>unweighted_Graph;
@@ -17,7 +53,6 @@ public:
     void add_Edge(int src,int des);
     void display();
     void has_Cycle();
-    bool DFS(int src,int parent,set<int>&visited);
 };
 
 void Graph::createGraph(){
@@ -59,33 +94,30 @@ void Graph::display(){
     }
 }
 
-bool Graph::DFS(int src,int parent,set<int>&visited){
-    bool result = false;
-    visited.insert(src);
-    for(auto ele: unweighted_Graph[src]){
-        if(visited.count(ele) && parent != ele)return true;
-        if(!visited.count(ele))result= DFS(ele,src,visited);
-        if(result)return true;
-    }
-    return false;
-}
-
 void Graph::has_Cycle(){
-    bool result = false;
-    set<int>visited;
+    set<pair<int,int>>visited;
+    DSU dsu(unweighted_Graph.size());
     for(int i=0;i<unweighted_Graph.size();i++){
-        if(! visited.count(i)){
-            result = DFS(i,-1,visited);
+        for(auto neighbour:unweighted_Graph[i]){
+            if(!visited.count({i,neighbour}) && !visited.count({neighbour,i})){
+                if(dsu.findGroupLeader(i)!=dsu.findGroupLeader(neighbour)){
+                    dsu.unionOfGroups(i,neighbour);
+                }
+                else{
+                    cout<<"Cycle Detected\n";
+                    return;
+                }
+                visited.insert({i,neighbour});
+            }
         }
     }
-    if(result)cout<<"Cycle Detected\n";
-    else cout<<"No cycle exists\n";
+    cout<<"No Cycle Exists\n";
     return;
 }
 
 int main(){
     cout<<"\nWelcome to the world of programming\n";
-    cout<<"Program is dedicated to detect a Cycle in Undirected Graph using DFS\n";
+    cout<<"Program is dedicated to detect a Cycle in Undirected Graph using DSU\n";
     Graph G;
     G.createGraph();
     G.has_Cycle();

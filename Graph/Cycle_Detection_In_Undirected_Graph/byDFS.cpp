@@ -1,6 +1,7 @@
 #include <iostream>
 #include <list>
 #include <vector>
+#include <set>
 using namespace std;
 
 class Graph{
@@ -15,6 +16,8 @@ public:
     void createGraph();
     void add_Edge(int src,int des);
     void display();
+    void has_Cycle();
+    bool DFS(int src,int parent,set<int>&visited);
 };
 
 void Graph::createGraph(){
@@ -56,10 +59,34 @@ void Graph::display(){
     }
 }
 
+bool Graph::DFS(int src,int parent,set<int>&visited){
+    bool result = false;
+    visited.insert(src);
+    for(auto ele: unweighted_Graph[src]){
+        if(visited.count(ele) && parent != ele)return true;
+        if(!visited.count(ele))result= DFS(ele,src,visited);
+        if(result)return true;
+    }
+    return false;
+}
+
+void Graph::has_Cycle(){
+    bool result = false;
+    set<int>visited;
+    for(int i=0;i<unweighted_Graph.size();i++){
+        if(! visited.count(i)){
+            result = DFS(i,-1,visited);
+        }
+    }
+    if(result)cout<<"Cycle Detected\n";
+    else cout<<"No cycle exists\n";
+    return;
+}
+
 int main(){
     cout<<"\nWelcome to the world of programming\n";
-    cout<<"Program is based on Unweighted Graph implementation using Adjacency List approach without templates\n";
+    cout<<"Program is dedicated to detect a Cycle in directed Graph using DFS\n";
     Graph G;
     G.createGraph();
-    G.display();
+    G.has_Cycle();
 }
