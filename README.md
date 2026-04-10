@@ -4,7 +4,7 @@ This repository contains my **DSA practice solutions** collected while solving p
 
 - **GeeksforGeeks (GFG)**
 - **LeetCode**
-- My **DSA batch / course practice**
+- My **DSA batch / course practice**                 
 
 Most solutions are written in **C++**, and wherever applicable I also practice in **Python**.
 
