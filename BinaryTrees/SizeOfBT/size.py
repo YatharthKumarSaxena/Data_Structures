@@ -1,0 +1,13 @@
+class Node:
+    def _init_(self,val):
+        self.data = val
+        self.left = None
+        self.right = None
+
+class Solution:
+    def getSize(self, root):
+        # code here
+        #code here
+        if not root: return 0
+        return 1 + self.getSize(root.left) + self.getSize(root.right)
+        
